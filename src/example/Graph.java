@@ -1,6 +1,7 @@
 package example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -9,12 +10,16 @@ import java.util.TreeSet;
 
 public class Graph {
 	private ArrayList<AdjacencyInfo> lists = new ArrayList<AdjacencyInfo>();
-
+	
 	public void addVertice(Vertice vertice)
 	{
 		AdjacencyInfo info = new AdjacencyInfo(vertice);
 		vertice.setIndex(lists.size());
 		lists.add(info);
+	}
+	public void addEdge(Edge edge, boolean directed)
+	{
+		addEdge(edge.getVi().getIndex(), edge.getVj().getIndex(), edge.getCost(), directed);
 	}
 	public void addEdge(int i, int j, Integer cost, boolean directed)
 	{
@@ -75,36 +80,46 @@ public class Graph {
 			}
 		}
 	}
-	public Set<Vertice> getVertices()
-	{
-		Set<Vertice> vertices = new HashSet<Vertice>();
-		for(AdjacencyInfo info : lists)
-		{
-			vertices.add(info.getVertice());
-		}
-		return vertices;
-	}
 	public Graph spanningTree()
 	{
+		Graph result = new Graph();
 		TreeSet<Edge> set = new TreeSet<Edge>();
-		Set<Vertice> X = new HashSet<Vertice>();
-		Set<Vertice> T = new HashSet<Vertice>();
-		Set<Vertice> V = getVertices();
-		X.add(lists.get(0).getVertice());
+		HashMap<Integer, Vertice> X = new HashMap<Integer, Vertice>();
+		//O(V)
 		for(AdjacencyInfo info : lists)
 		{
-			for(Edge edge : info)
+			result.addVertice(info.getVertice());
+		}
+		//O(E)
+		for(AdjacencyInfo info : lists)
+		{
+			for(Edge edge:info)
 			{
+				
 				set.add(edge);
 			}
 		}
 		System.out.println(set);
-//		while(!V.equals(X))
-//		{
-//			
-//		}
-		return null;
+		//O(E)
+		while(!set.isEmpty())
+		{
+			Edge edge = set.first();
+			//O(log(E)) the time required to query a heap
+			set.remove(edge);
+			Vertice vi = edge.getVi();
+			Vertice vj = edge.getVj();
+			//O(1) X is a hashmap so every query takes constant time
+			if(X.get(vi.getIndex()) != null && X.get(vj.getIndex()) != null)
+			{
+				continue;
+			}
+			X.put(vi.getIndex(), vi);
+			X.put(vj.getIndex(), vj);
+			result.addEdge(edge, false);
+		}
+		return result;
 	}
+
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -134,7 +149,7 @@ public class Graph {
 		System.out.println(graph.toString());
 		graph.bfs();
 		graph.dfs();
-		graph.spanningTree();
-		
+		Graph st = graph.spanningTree();
+		System.out.println(st.toString());
 	}
 }
