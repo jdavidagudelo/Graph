@@ -8,11 +8,9 @@ public class AdjacencyInfo extends LinkedList<Edge>{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Vertice vertice;
-
 	public Vertice getVertice() {
 		return vertice;
 	}
-
 	public void setVertice(Vertice vertice) {
 		this.vertice = vertice;
 	}

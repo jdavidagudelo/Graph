@@ -1,12 +1,12 @@
 package example;
 
-public class Vertice {
-	private Object value;
+public class Vertice<V> {
+	private V value;
 	private Integer index;
 	public Object getValue() {
 		return value;
 	}
-	public void setValue(Object value) {
+	public void setValue(V value) {
 		this.value = value;
 	}
 	public Integer getIndex() {
@@ -15,7 +15,7 @@ public class Vertice {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	public Vertice(Object value) {
+	public Vertice(V value) {
 		super();
 		this.value = value;
 	}
